@@ -2,6 +2,8 @@ package main;
 
 import java.util.ArrayList;
 
+import Main.Node;
+
 /**
  * 
  * @author Bhuvana Bellala
@@ -12,23 +14,34 @@ import java.util.ArrayList;
  */
 
 public class Node {
-	
+
 	//list of attributes for the class
 	private ArrayList<Action> listOfActions;
 	private int reward;
 	private String name;
 	private boolean isHere;
 	private boolean isGoal;
-	
+
 	//Constructor: Initializes the attributes
 	public Node(String name, int reward){
-		
+
 		this.name = name;
 		this.reward = reward;
 		this.isHere = false;
 		this.isGoal = false;
 		this.listOfActions = new ArrayList<Action>();
-		
+
+	}
+
+	//Shallow Copy Constructor
+	public Node(Node other){
+		this.name = other.name;
+		this.isGoal = other.isGoal;
+		this.isHere = other.isHere;
+		this.reward = other.reward;
+		for(int i = 0; i < other.listOfActions.size();i ++){
+			this.listOfActions.add(new Action(other.listOfActions.get(i)));
+		}
 	}
 
 	public int getReward() {
@@ -62,11 +75,11 @@ public class Node {
 	public void setGoal(boolean isGoal) {
 		this.isGoal = isGoal;
 	}
-	
+
 	/**toString() - print the node
 	 */
 	public String toString(){
-		
+
 		String stateInfo = "";
 		stateInfo += "The state is " + this.name;
 		return stateInfo;
