@@ -7,6 +7,8 @@ public class GraphDomain {
 	//Constructor: create the 9 states and the associated actions
 	public GraphDomain(){
 		
+		
+		
 	}
 
 }
