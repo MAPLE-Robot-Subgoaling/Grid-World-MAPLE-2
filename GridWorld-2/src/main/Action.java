@@ -24,11 +24,11 @@ public class Action {
 	private Node endState;
 	private double qValue;
 	
-	public Action(String name,Node endHere, double qValue){
+	public Action(String name,Node endHere, double qValue, HashMap<String, Double> probabilities){
 		this.name = name;
 		this.endState = endHere;
 		this.qValue = qValue;
-		this.probablities = new HashMap<String, Double>();
+		this.probablities = probabilities;
 	}
 	
 	//Shallow Copy constructor

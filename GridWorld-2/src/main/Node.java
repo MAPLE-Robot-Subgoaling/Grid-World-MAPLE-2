@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 
@@ -83,4 +84,7 @@ public class Node {
 		return stateInfo;
 	}
 
+	public void addAction(String name,Node endHere, double qValue, HashMap <String, Double> probabilities){
+		this.listOfActions.add(new Action(name,endHere, qValue, probabilities));
+	}
 }
