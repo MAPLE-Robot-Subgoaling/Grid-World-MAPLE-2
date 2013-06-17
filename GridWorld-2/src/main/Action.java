@@ -62,4 +62,8 @@ public class Action {
 	public void setqValue(double qValue) {
 		this.qValue = qValue;
 	}
+	
+	public HashMap<String, Double> getProbs(){
+		return probablities;
+	}
 }

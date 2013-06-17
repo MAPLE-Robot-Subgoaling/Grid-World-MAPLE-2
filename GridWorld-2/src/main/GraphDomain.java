@@ -1,6 +1,7 @@
 package main;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 //Create the actual domain
 //Create the states(Node) and associate with actions
@@ -125,7 +126,7 @@ public class GraphDomain {
 		nodes.get(nodes.size() - 1).setGoal(true);
 	}
 	
-	public void move(int index){
+	public void move(){
 		/**
 		 * Steps for move:
 		 * 1) Find the Agent and it's corresponding Node Location
@@ -143,6 +144,71 @@ public class GraphDomain {
 		 *
 		 * Note: if the end state is null, Agent doesn't move, but updates the Q-Value for that action
 		 */
+		int agentLoc = findAgent();
+		double largeQVal = 0;
+		String actionName = "";
+		int indexAction = 0;
+		
+		for(int i = 0; i < nodes.get(agentLoc).getActionList().size(); i++){ //find the best possible action
+			if(largeQVal <= nodes.get(agentLoc).getActionList().get(i).getqValue()){
+				largeQVal = nodes.get(agentLoc).getActionList().get(i).getqValue();
+				actionName = nodes.get(agentLoc).getActionList().get(i).getName();
+				indexAction = i;
+			}
+		}
+		
+		System.out.println("Current Location: " + nodes.get(agentLoc).getName());
+		System.out.println("Qval: " + largeQVal + "\tThe Agent wants to take Action " + actionName);
+		
+		double randNum = Math.random(); //generate a random number
+		System.out.println("Random Number: " + randNum);
+		HashMap<String, Double> probs =  nodes.get(agentLoc).getActionList().get(indexAction).getProbs(); //collect the probability models
+		
+		Iterator<Entry<String, Double>> itr = probs.entrySet().iterator();
+		while(itr.hasNext()){ //goes through the probabilities looking for the action
+			Map.Entry<String, Double> pairs = (Map.Entry<String, Double>) itr.next();
+			//System.out.println(pairs.getKey() + "\t" + pairs.getValue());
+			if(randNum >= pairs.getValue()){
+				actionName = pairs.getKey();
+				break;
+			}
+		}
+		
+		//System.out.println("\n\n The new action executed is: " + actionName + "\n\n"); 
+		
+		for(int i = 0; i < nodes.get(agentLoc).getActionList().size(); i++){
+			
+			if(actionName.equals(nodes.get(agentLoc).getActionList().get(i).getName())){ //find the corresponding action
+				nodes.get(agentLoc).setHere(false); //agent leaves the node
+				if(nodes.get(agentLoc).getActionList().get(i).getEndState() != null){ //did he hit a wall?
+					Node endNode = nodes.get(agentLoc).getActionList().get(i).getEndState(); //moves to next node
+					endNode.setHere(true);
+					Double qMax = 0.0;
+					
+					for(int j = 0; j < endNode.getActionList().size(); j++){
+						if(qMax <= endNode.getActionList().get(i).getqValue())
+							qMax = endNode.getActionList().get(i).getqValue();
+					}
+					
+					nodes.get(agentLoc).getActionList().get(i).setqValue(this.updateQVal(largeQVal, qMax, 0.99, 0.95, nodes.get(agentLoc).getReward()));
+					System.out.println("New Location: " + endNode.getName());
+					
+				}else{ //hit a wall
+					nodes.get(agentLoc).setHere(true);
+					Double qMax = 0.0;
+						
+					for(int j = 0; j < nodes.get(agentLoc).getActionList().size(); j++){
+						if(qMax <= nodes.get(agentLoc).getActionList().get(i).getqValue())
+							qMax = nodes.get(agentLoc).getActionList().get(i).getqValue();
+					}
+					
+					nodes.get(agentLoc).getActionList().get(i).setqValue(this.updateQVal(largeQVal, qMax, 0.99, 0.95, nodes.get(agentLoc).getReward()));
+					System.out.println("New Location: " + nodes.get(agentLoc).getName());
+				}
+			}
+		}
+		
+		System.out.println("The evironmnet dicates the Action taken is: " + actionName + "\tNew QValue: " + nodes.get(agentLoc).getActionList().get(indexAction).getqValue());	
 	}
 	
 	/**
@@ -164,6 +230,10 @@ public class GraphDomain {
 				return i;
 		}
 		return -1;
+	}
+	
+	public Double updateQVal(Double qOld, Double qMax, Double lRate, Double disFactor, int Reward){
+		return qOld + lRate * (Reward + disFactor * (qMax - qOld));
 	}
 	
 
