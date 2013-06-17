@@ -9,10 +9,14 @@ public class GraphDomain {
 	
 	//The Environment of Nodes
 	private ArrayList<Node> nodes = new ArrayList<Node>();
+	//Running total of the Reward
 	private int REWARD_COUNT = 0;
 			
 	
 	//Constructor: create the 9 states and the associated actions
+	/**
+	 * GraphDomain() - Constructor for the GraphDomain
+	 */
 	public GraphDomain(){
 		nodes.add(new Node("s0", -1));
 		nodes.add(new Node("s1", -1));
@@ -22,7 +26,7 @@ public class GraphDomain {
 		nodes.add(new Node("s5", -1));
 		nodes.add(new Node("s6", -1));
 		nodes.add(new Node("s7", -1));
-		nodes.add(new Node("s8", 10));
+		nodes.add(new Node("s8", 100));
 		
 		//sets up the start state and the goal state 
 		nodes.get(0).setHere(true);
@@ -32,6 +36,9 @@ public class GraphDomain {
 		this.initializeActions();
 	}
 	
+	/**
+	 * initializeAction() - sets up the Actions Sets for each Node
+	 */
 	private void initializeActions(){
 		//Action Probabilities
 		HashMap<String, Double> northProb = new HashMap<String, Double>();
@@ -170,14 +177,11 @@ public class GraphDomain {
 		Iterator<Entry<String, Double>> itr = probs.entrySet().iterator();
 		while(itr.hasNext()){ //goes through the probabilities looking for the action
 			Map.Entry<String, Double> pairs = (Map.Entry<String, Double>) itr.next();
-			//System.out.println(pairs.getKey() + "\t" + pairs.getValue());
 			if(randNum >= pairs.getValue()){
 				actionName = pairs.getKey();
 				break;
 			}
 		}
-		
-		//System.out.println("\n\n The new action executed is: " + actionName + "\n\n"); 
 		
 		for(int i = 0; i < nodes.get(agentLoc).getActionList().size(); i++){
 			
@@ -222,12 +226,14 @@ public class GraphDomain {
 	 * @return - true or false
 	 */
 	public boolean isWinner(int index){
-		//this.REWARD_COUNT += nodes.get(8).getReward();
+		if(nodes.get(index).isHere() && nodes.get(index).isGoal())
+			this.REWARD_COUNT += nodes.get(8).getReward();
+		
 		return nodes.get(index).isHere() && nodes.get(index).isGoal();
 	}
 	
 	/**
-	 * findAgent() - scans the arraylist for the agent location
+	 * findAgent() - scans the Array List for the agent location
 	 * @return - index of the agent's locations
 	 */
 	public int findAgent(){
@@ -239,7 +245,7 @@ public class GraphDomain {
 	}
 	
 	/**
-	 * updateQVal() - updates the Q-Value for the correpsonding action
+	 * updateQVal() - updates the Q-Value for the corresponding action
 	 * @param qOld - the old q-value
 	 * @param qMax - the max q-value in the next action
 	 * @param lRate - learning rate

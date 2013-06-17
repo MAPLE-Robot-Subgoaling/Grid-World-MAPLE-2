@@ -20,7 +20,7 @@ public class Driver {
 				step++;
 			}
 			
-			System.out.println("\nThe Agent has reached the goal state. Number of steps: " + step + " with a reward of " + (environment.getRewardTotal() + 10) + "\n");
+			System.out.println("\nThe Agent has reached the goal state. Number of steps: " + step + " with a reward of " + environment.getRewardTotal() + "\n");
 			environment.resetSim();
 		}
 	}
