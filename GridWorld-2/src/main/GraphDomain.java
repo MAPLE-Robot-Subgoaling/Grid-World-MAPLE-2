@@ -222,7 +222,7 @@ public class GraphDomain {
 	 * @return - true or false
 	 */
 	public boolean isWinner(int index){
-		this.REWARD_COUNT += nodes.get(8).getReward();
+		//this.REWARD_COUNT += nodes.get(8).getReward();
 		return nodes.get(index).isHere() && nodes.get(index).isGoal();
 	}
 	
@@ -249,10 +249,7 @@ public class GraphDomain {
 	 */
 	public Double updateQVal(Double qOld, Double qMax, Double lRate, Double disFactor, int Reward){
 		double newQVal =  qOld + lRate * (Reward + disFactor * (qMax - qOld));
-		System.out.println(Reward);
 		this.REWARD_COUNT += Reward;
-		System.out.println("\n\n" + this.REWARD_COUNT + "\n\n");
-		//System.out.print("\n\n" + newQVal + "\n\n");
 		return newQVal;
 	}
 	
