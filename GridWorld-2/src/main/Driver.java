@@ -9,7 +9,7 @@ public class Driver {
 		
 		GraphDomain environment = new GraphDomain();
 	
-		for(int i = 0; i < 10; i++){
+		for(int i = 0; i < 3	; i++){
 			
 			System.out.println("\t--Trial Number " + i +"--");
 			
@@ -20,7 +20,7 @@ public class Driver {
 				step++;
 			}
 			
-			System.out.println("\nThe Agent has reached the goal state. Number of steps: " + step + "\n");
+			System.out.println("\nThe Agent has reached the goal state. Number of steps: " + step + " with a reward of " + environment.getRewardTotal() + "\n");
 			environment.resetSim();
 		}
 	}

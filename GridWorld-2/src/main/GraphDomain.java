@@ -8,7 +8,8 @@ import java.util.Map.Entry;
 public class GraphDomain {
 	
 	//The Environment of Nodes
-	private ArrayList<Node> nodes = new ArrayList<Node>();;
+	private ArrayList<Node> nodes = new ArrayList<Node>();
+	private int REWARD_COUNT = 0;
 			
 	
 	//Constructor: create the 9 states and the associated actions
@@ -21,7 +22,7 @@ public class GraphDomain {
 		nodes.add(new Node("s5", -1));
 		nodes.add(new Node("s6", -1));
 		nodes.add(new Node("s7", -1));
-		nodes.add(new Node("s8", 1000));
+		nodes.add(new Node("s8", 10));
 		
 		//sets up the start state and the goal state 
 		nodes.get(0).setHere(true);
@@ -124,6 +125,7 @@ public class GraphDomain {
 	public void resetSim(){
 		nodes.get(0).setHere(true);
 		nodes.get(nodes.size() - 1).setGoal(true);
+		this.REWARD_COUNT = 0;
 	}
 	
 	/**
@@ -203,7 +205,7 @@ public class GraphDomain {
 							qMax = nodes.get(agentLoc).getActionList().get(i).getqValue(); //maximum qvalue found in all actions
 					}
 					
-					//updating qvalue for the action chosen by Agent
+					//updating qValue for the action chosen by Agent
 					nodes.get(agentLoc).getActionList().get(indexAction).setqValue(this.updateQVal(largeQVal, qMax, 0.99, 0.95, nodes.get(agentLoc).getReward())); 
 					System.out.println("New Location: " + nodes.get(agentLoc).getName());
 				}
@@ -220,6 +222,7 @@ public class GraphDomain {
 	 * @return - true or false
 	 */
 	public boolean isWinner(int index){
+		this.REWARD_COUNT += nodes.get(8).getReward();
 		return nodes.get(index).isHere() && nodes.get(index).isGoal();
 	}
 	
@@ -246,8 +249,19 @@ public class GraphDomain {
 	 */
 	public Double updateQVal(Double qOld, Double qMax, Double lRate, Double disFactor, int Reward){
 		double newQVal =  qOld + lRate * (Reward + disFactor * (qMax - qOld));
+		System.out.println(Reward);
+		this.REWARD_COUNT += Reward;
+		System.out.println("\n\n" + this.REWARD_COUNT + "\n\n");
 		//System.out.print("\n\n" + newQVal + "\n\n");
 		return newQVal;
+	}
+	
+	/**
+	 * getRewardTotal() - returns the total reward collected over all the steps
+	 * @return - reward total
+	 */
+	public int getRewardTotal(){
+		return this.REWARD_COUNT;
 	}
 	
 
