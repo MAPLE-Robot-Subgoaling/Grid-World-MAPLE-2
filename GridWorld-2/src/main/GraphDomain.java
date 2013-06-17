@@ -126,24 +126,24 @@ public class GraphDomain {
 		nodes.get(nodes.size() - 1).setGoal(true);
 	}
 	
+	/**
+	 * Steps for move:
+	 * 1) Find the Agent and it's corresponding Node Location
+	 * 2) Using the Action List inside of the Node, find the largest Q-Value and return it.
+	 * 3) When you find the largest Q-Value, return a String Value of that corresponding Action
+	 * 4) Node goes to the Action list and finds the matching action, end state, and probability table.
+	 * 5) Node creates a random number to determine the outcome of that action.
+	 * 	a) if within range:
+	 * 		i) Agent Updates his position to the end state node
+	 * 		ii) Agent Recomputes the new Q-Value and applies it to that action. 
+	 *	b)if not within range:
+	 *		i) Agent executes action determined by Random Variable
+	 *		ii) Agent updates his position and the corresponding Q-Value for the action chosen.
+	 *	6) Print out Transition results
+	 *
+	 * Note: if the end state is null, Agent doesn't move, but updates the Q-Value for that action
+	 */
 	public void move(){
-		/**
-		 * Steps for move:
-		 * 1) Find the Agent and it's corresponding Node Location
-		 * 2) Using the Action List inside of the Node, find the largest Q-Value and return it.
-		 * 3) When you find the largest Q-Value, return a String Value of that corresponding Action
-		 * 4) Node goes to the Action list and finds the matching action, end state, and probability table.
-		 * 5) Node creates a random number to determine the outcome of that action.
-		 * 	a) if within range:
-		 * 		i) Agent Updates his position to the end state node
-		 * 		ii) Agent Recomputes the new Q-Value and applies it to that action. 
-		 *	b)if not within range:
-		 *		i) Agent executes action determined by Random Variable
-		 *		ii) Agent updates his position and the corresponding Q-Value for the action chosen.
-		 *	6) Print out Transition results
-		 *
-		 * Note: if the end state is null, Agent doesn't move, but updates the Q-Value for that action
-		 */
 		int agentLoc = findAgent();
 		double largeQVal = 0;
 		String actionName = "";
@@ -158,10 +158,11 @@ public class GraphDomain {
 		}
 		
 		System.out.println("Current Location: " + nodes.get(agentLoc).getName());
-		System.out.println("Qval: " + largeQVal + "\tThe Agent wants to take Action " + actionName);
+		System.out.print("Qval: " );
+		System.out.printf("%.3f",largeQVal);
+		System.out.println("\tThe Agent wants to take Action " + actionName);
 		
 		double randNum = Math.random(); //generate a random number
-		System.out.println("Random Number: " + randNum);
 		HashMap<String, Double> probs =  nodes.get(agentLoc).getActionList().get(indexAction).getProbs(); //collect the probability models
 		
 		Iterator<Entry<String, Double>> itr = probs.entrySet().iterator();
@@ -190,7 +191,7 @@ public class GraphDomain {
 							qMax = endNode.getActionList().get(i).getqValue();
 					}
 					
-					nodes.get(agentLoc).getActionList().get(i).setqValue(this.updateQVal(largeQVal, qMax, 0.99, 0.95, nodes.get(agentLoc).getReward()));
+					nodes.get(agentLoc).getActionList().get(indexAction).setqValue(this.updateQVal(largeQVal, qMax, 0.99, 0.95, nodes.get(agentLoc).getReward()));
 					System.out.println("New Location: " + endNode.getName());
 					
 				}else{ //hit a wall
@@ -199,16 +200,18 @@ public class GraphDomain {
 						
 					for(int j = 0; j < nodes.get(agentLoc).getActionList().size(); j++){
 						if(qMax <= nodes.get(agentLoc).getActionList().get(i).getqValue())
-							qMax = nodes.get(agentLoc).getActionList().get(i).getqValue();
+							qMax = nodes.get(agentLoc).getActionList().get(i).getqValue(); //maximum qvalue found in all actions
 					}
 					
-					nodes.get(agentLoc).getActionList().get(i).setqValue(this.updateQVal(largeQVal, qMax, 0.99, 0.95, nodes.get(agentLoc).getReward()));
+					//updating qvalue for the action chosen by Agent
+					nodes.get(agentLoc).getActionList().get(indexAction).setqValue(this.updateQVal(largeQVal, qMax, 0.99, 0.95, nodes.get(agentLoc).getReward())); 
 					System.out.println("New Location: " + nodes.get(agentLoc).getName());
 				}
 			}
 		}
 		
-		System.out.println("The evironmnet dicates the Action taken is: " + actionName + "\tNew QValue: " + nodes.get(agentLoc).getActionList().get(indexAction).getqValue());	
+		System.out.print("The evironmnet dicates the Action taken is: " + actionName + "\tNew QValue for action " + actionName +": " );
+		System.out.printf("%.3f%n",nodes.get(agentLoc).getActionList().get(indexAction).getqValue());
 	}
 	
 	/**
@@ -232,8 +235,19 @@ public class GraphDomain {
 		return -1;
 	}
 	
+	/**
+	 * updateQVal() - updates the Q-Value for the correpsonding action
+	 * @param qOld - the old q-value
+	 * @param qMax - the max q-value in the next action
+	 * @param lRate - learning rate
+	 * @param disFactor - discount factor
+	 * @param Reward - reward function
+	 * @return - new QValue for the function.
+	 */
 	public Double updateQVal(Double qOld, Double qMax, Double lRate, Double disFactor, int Reward){
-		return qOld + lRate * (Reward + disFactor * (qMax - qOld));
+		double newQVal =  qOld + lRate * (Reward + disFactor * (qMax - qOld));
+		//System.out.print("\n\n" + newQVal + "\n\n");
+		return newQVal;
 	}
 	
 
