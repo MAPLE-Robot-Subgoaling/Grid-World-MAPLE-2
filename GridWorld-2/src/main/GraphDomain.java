@@ -154,7 +154,7 @@ public class GraphDomain {
 	 */
 	public void move(){
 		int agentLoc = findAgent();
-		double largeQVal = 0;
+		double largeQVal = -100;
 		String actionName = "";
 		int indexAction = 0;
 		
@@ -187,6 +187,7 @@ public class GraphDomain {
 			
 			if(actionName.equals(nodes.get(agentLoc).getActionList().get(i).getName())){ //find the corresponding action
 				nodes.get(agentLoc).setHere(false); //agent leaves the node
+				
 				if(nodes.get(agentLoc).getActionList().get(i).getEndState() != null){ //did he hit a wall?
 					Node endNode = nodes.get(agentLoc).getActionList().get(i).getEndState(); //moves to next node
 					endNode.setHere(true);
@@ -203,7 +204,7 @@ public class GraphDomain {
 				}else{ //hit a wall
 					nodes.get(agentLoc).setHere(true);
 					Double qMax = 0.0;
-						
+					
 					for(int j = 0; j < nodes.get(agentLoc).getActionList().size(); j++){
 						if(qMax <= nodes.get(agentLoc).getActionList().get(i).getqValue())
 							qMax = nodes.get(agentLoc).getActionList().get(i).getqValue(); //maximum qvalue found in all actions
