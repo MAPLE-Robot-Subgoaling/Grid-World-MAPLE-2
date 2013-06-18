@@ -41,28 +41,28 @@ public class GraphDomain {
 		HashMap<String, Double> westProb = new HashMap<String, Double>();
 
 		//North action
-		northProb.put("North", 0.70);
-		northProb.put("South", 0.8);
-		northProb.put("East", 0.9);
-		northProb.put("West", 1.0);
+		northProb.put("North", 1.0);
+		northProb.put("South", 0.3);
+		northProb.put("East", 0.2);
+		northProb.put("West", 0.1);
 
 		//South action
-		southProb.put("North", 0.1);
+		southProb.put("North", 1.0);
 		southProb.put("South", 0.8);
-		southProb.put("East", 0.9);
-		southProb.put("West", 1.0);
+		southProb.put("East", 0.2);
+		southProb.put("West", 0.1);
 
 		//East Action
-		eastProb.put("North", 0.1);
-		eastProb.put("South", 0.2);
-		eastProb.put("East", 0.9);
-		eastProb.put("West", 1.0);
+		eastProb.put("North", 1.0);
+		eastProb.put("South", 0.9);
+		eastProb.put("East", 0.8);
+		eastProb.put("West", 0.1);
 
 		//West Action
-		westProb.put("North", 0.1);
-		westProb.put("South", 0.2);
-		westProb.put("East", 0.3);
-		westProb.put("West", 1.0);
+		westProb.put("North", 1.0);
+		westProb.put("South", 0.9);
+		westProb.put("East", 0.8);
+		westProb.put("West", 0.7);
 
 		//s0
 		nodes.get(0).addAction("North", null, Math.random() * 12, northProb);
@@ -139,22 +139,24 @@ public class GraphDomain {
 				action = listAction;	// Set action to new highest q-value action
 			}
 		}
-		System.out.print("The agent chose to go " + action);
+		System.out.print("The agent chose to go " + action + " from " + currentNode);
 		System.out.println(". This action has a q-value of " + action.getqValue());
-		if (action == null) // If action found
+		if (action == null){ // If action found
 			System.out.println("Problem - No Action Found on move("
 					+ String.valueOf(index) + ")");
+		}
 
 		boolean withinRange = true; // Temporary
 
 		// Check probability outcome, set withinRange
 		String actionShouldTake = null;
+		double randomNumber = Math.random();
 
 		if (withinRange) {
-			double randomNumber = Math.random();
 			HashMap<String, Double> probabilities= action.getProbablities();
 			for(Map.Entry<String, Double> entry: probabilities.entrySet()){
 				if(randomNumber <= entry.getValue()){
+					System.out.println("The ranndom number is " + randomNumber + ". The value is " +entry.getValue());
 					actionShouldTake = entry.getKey();
 					break;
 				}
@@ -163,17 +165,18 @@ public class GraphDomain {
 
 		for(Action listAction : currentNode.getListOfActions()){	// Search for highest q-value action
 			if(listAction.getName().equals(actionShouldTake)){
+				System.out.println("The agent actually went "+ listAction);
 				if(listAction.getEndState() == null){
-					System.out.println("You hit a wall");
-					
+					System.out.println("You hit a wall");		
 					//Update q-values
 					Double qNew = maxQValue + LEARNINGRATE * (WALLREWARD + DISCOUNTFACTOR *(maxQValue - maxQValue));
 					action.setqValue(qNew);
+					System.out.println("The updated qvalue for action " + action + " is " + action.getqValue() + "\n");
 				}else{
-					System.out.println(listAction.getEndState());
+					System.out.println("The agent ended up in " + listAction.getEndState());
 					currentNode.setHere(false);
 					listAction.getEndState().setHere(true);
-					
+
 					//Update q-value
 					//Find the maximum qvalue of the new state
 					double endStatemaxQValue = -100;
@@ -182,8 +185,9 @@ public class GraphDomain {
 							endStatemaxQValue = actionList.getqValue();
 						}
 					}
-					Double qNew = maxQValue + LEARNINGRATE * (WALLREWARD + DISCOUNTFACTOR *(endStatemaxQValue - maxQValue));
+					Double qNew = maxQValue + LEARNINGRATE * (listAction.getEndState().getReward() + DISCOUNTFACTOR *(endStatemaxQValue - maxQValue));
 					action.setqValue(qNew);
+					System.out.println("The updated qvalue for action " + action + " is " + action.getqValue() + "\n");
 				}
 			} 
 		}
