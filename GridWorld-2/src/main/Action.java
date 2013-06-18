@@ -39,6 +39,14 @@ public class Action {
 		this.probablities = other.probablities;
 	}
 	
+	public HashMap<String, Double> getProbablities() {
+		return probablities;
+	}
+
+	public void setProbablities(HashMap<String, Double> probablities) {
+		this.probablities = probablities;
+	}
+
 	public String getName() {
 		return name;
 	}

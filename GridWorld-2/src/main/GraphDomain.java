@@ -147,6 +147,7 @@ public class GraphDomain {
 		// Check probability outcome, set withinRange
 
 		if (withinRange) {
+			double randomNumber = Math.random();
 			currentNode.setHere(false);
 			action.getEndState().setHere(true);
 
