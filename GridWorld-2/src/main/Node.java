@@ -87,4 +87,9 @@ public class Node {
 	public void addAction(String name,Node endHere, double qValue, HashMap <String, Double> probabilities){
 		this.listOfActions.add(new Action(name,endHere, qValue, probabilities));
 	}
+	
+	public ArrayList<Action> getListOfActions(){
+		return this.listOfActions;
+	}
+	
 }

@@ -126,6 +126,41 @@ public class GraphDomain {
 	}
 	
 	public void move(int index){
+		
+		Node currentNode = nodes.get(index);	// Get Node
+		double maxQValue = -1;
+		Action action = null;	// Action with highest q-value after search
+		for(Action listAction : currentNode.getListOfActions()){	// Search for highest q-value action
+			if(listAction.getqValue() > maxQValue){
+				maxQValue = listAction.getqValue();
+				action = listAction;	// Set action to new highest q-value action
+			}
+		}
+		
+		if (action == null) // If action found
+			System.out.println("Problem - No Action Found on move("
+					+ String.valueOf(index) + ")");
+
+		boolean withinRange = true; // Temporary
+		Random random = new Random();
+
+		// Check probability outcome, set withinRange
+
+		if (withinRange) {
+			currentNode.setHere(false);
+			action.getEndState().setHere(true);
+
+			// Update Q value
+
+		} else {
+			
+			// Execute random action
+			// Update new position and Q value
+			
+		}
+		
+		// Print transition results
+		
 		/**
 		 * Steps for move:
 		 * 1) Find the Agent and it's corresponding Node Location
