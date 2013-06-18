@@ -80,7 +80,7 @@ public class Node {
 	public String toString(){
 
 		String stateInfo = "";
-		stateInfo += "The state is " + this.name;
+		stateInfo += this.name;
 		return stateInfo;
 	}
 

@@ -70,4 +70,9 @@ public class Action {
 	public void setqValue(double qValue) {
 		this.qValue = qValue;
 	}
+	
+	public String toString(){
+		String actionName = this.name;
+		return actionName;
+	}
 }
