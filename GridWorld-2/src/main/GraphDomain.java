@@ -125,6 +125,7 @@ public class GraphDomain {
 	 */
 	public void resetSim(){
 		nodes.get(0).setHere(true);
+		nodes.get(nodes.size() - 1).setHere(false);
 		nodes.get(nodes.size() - 1).setGoal(true);
 	}
 
