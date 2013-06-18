@@ -168,7 +168,7 @@ public class GraphDomain {
 					
 					//Update q-values
 					Double qNew = maxQValue + LEARNINGRATE * (WALLREWARD + DISCOUNTFACTOR *(maxQValue - maxQValue));
-					listAction.setqValue(qNew);
+					action.setqValue(qNew);
 				}else{
 					System.out.println(listAction.getEndState());
 					currentNode.setHere(false);
@@ -183,7 +183,7 @@ public class GraphDomain {
 						}
 					}
 					Double qNew = maxQValue + LEARNINGRATE * (WALLREWARD + DISCOUNTFACTOR *(endStatemaxQValue - maxQValue));
-					listAction.setqValue(qNew);
+					action.setqValue(qNew);
 				}
 			} 
 		}
