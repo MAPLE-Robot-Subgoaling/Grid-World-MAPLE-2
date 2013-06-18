@@ -11,6 +11,8 @@ public class GraphDomain {
 	private ArrayList<Node> nodes = new ArrayList<Node>();
 	//Running total of the Reward
 	private int REWARD_COUNT = 0;
+	private final double LEARNING_RATE = 0.99;
+	private final double DISCOUNT_FACTOR = 0.95;
 			
 	
 	//Constructor: create the 9 states and the associated actions
@@ -198,7 +200,7 @@ public class GraphDomain {
 							qMax = endNode.getActionList().get(i).getqValue();
 					}
 					
-					nodes.get(agentLoc).getActionList().get(indexAction).setqValue(this.updateQVal(largeQVal, qMax, 0.99, 0.95, nodes.get(agentLoc).getReward()));
+					nodes.get(agentLoc).getActionList().get(indexAction).setqValue(this.updateQVal(largeQVal, qMax, nodes.get(agentLoc).getReward()));
 					System.out.println("New Location: " + endNode.getName());
 					
 				}else{ //hit a wall
@@ -211,13 +213,13 @@ public class GraphDomain {
 					}
 					
 					//updating qValue for the action chosen by Agent
-					nodes.get(agentLoc).getActionList().get(indexAction).setqValue(this.updateQVal(largeQVal, qMax, 0.99, 0.95, nodes.get(agentLoc).getReward())); 
+					nodes.get(agentLoc).getActionList().get(indexAction).setqValue(this.updateQVal(largeQVal, qMax, nodes.get(agentLoc).getReward())); 
 					System.out.println("New Location: " + nodes.get(agentLoc).getName());
 				}
 			}
 		}
 		
-		System.out.print("The evironmnet dicates the Action taken is: " + actionName + "\tNew QValue for action " + actionName +": " );
+		System.out.print("The evironmnet dicates the Action taken is: " + actionName + "\tNew QValue for action " + nodes.get(agentLoc).getActionList().get(indexAction).getName() +": " );
 		System.out.printf("%.3f%n",nodes.get(agentLoc).getActionList().get(indexAction).getqValue());
 	}
 	
@@ -249,13 +251,11 @@ public class GraphDomain {
 	 * updateQVal() - updates the Q-Value for the corresponding action
 	 * @param qOld - the old q-value
 	 * @param qMax - the max q-value in the next action
-	 * @param lRate - learning rate
-	 * @param disFactor - discount factor
 	 * @param Reward - reward function
 	 * @return - new QValue for the function.
 	 */
-	public Double updateQVal(Double qOld, Double qMax, Double lRate, Double disFactor, int Reward){
-		double newQVal =  qOld + lRate * (Reward + disFactor * (qMax - qOld));
+	public Double updateQVal(Double qOld, Double qMax, int Reward){
+		double newQVal =  qOld + this.LEARNING_RATE * (Reward + this.DISCOUNT_FACTOR * (qMax - qOld));
 		this.REWARD_COUNT += Reward;
 		return newQVal;
 	}
