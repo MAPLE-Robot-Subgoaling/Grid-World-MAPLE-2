@@ -234,5 +234,8 @@ public class GraphDomain {
 		return -1;
 	}
 
+	public Node getNode(int index){
+		return nodes.get(index);
+	}
 
 }
