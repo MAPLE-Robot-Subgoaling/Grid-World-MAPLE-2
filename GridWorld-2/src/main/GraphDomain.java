@@ -142,10 +142,6 @@ public class GraphDomain {
 		}
 		System.out.print("The agent chose to go " + action + " from " + currentNode);
 		System.out.println(". This action has a q-value of " + action.getqValue());
-		if (action == null){ // If action found
-			System.out.println("Problem - No Action Found on move("
-					+ String.valueOf(index) + ")");
-		}
 
 		boolean withinRange = true; // Temporary
 
